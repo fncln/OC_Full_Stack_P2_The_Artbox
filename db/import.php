@@ -7,13 +7,13 @@ $query = $db->prepare('
     VALUES (:id, :titre, :artiste, :description, :image)
 ');
 
-foreach ($oeuvres as $o) {
+foreach ($oeuvres as $oeuvre) {
     $query->execute([
-        'id'            =>$o['id'],
-        'titre'         =>$o['titre'],
-        'artiste'        =>$o['artiste'],
-        'description'   =>$o['description'],
-        'image'         =>$o['image'],
+        'id'            =>$oeuvre['id'],
+        'titre'         =>$oeuvre['titre'],
+        'artiste'        =>$oeuvre['artiste'],
+        'description'   =>$oeuvre['description'],
+        'image'         =>$oeuvre['image'],
     ]);
 }
 
