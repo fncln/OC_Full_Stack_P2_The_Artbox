@@ -1,7 +1,9 @@
 <?php
     require 'header.php';
-    require 'oeuvres.php';
+    require_once 'db/db.php';
+    $oeuvres = $db->query('SELECT * FROM oeuvres ORDER BY id ASC')->fetchAll();
 ?>
+
 <div id="liste-oeuvres">
     <?php foreach($oeuvres as $oeuvre): ?>
         <article class="oeuvre">
