@@ -1,4 +1,5 @@
 <?php
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre = trim($_POST['titre'] ?? '');
     $artiste = trim($_POST['artiste'] ?? '');
@@ -37,10 +38,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         header('Location: ajouter.php?' . http_build_query($params));
         exit;
-    } else {
-        echo "Formulaire valide ! Prêt pour l'étape 6.";
-        exit;
+    
     }
+
+require_once 'db/db.php';
+
+$query = $db->prepare('
+    INSERT INTO oeuvres (titre, artiste, image, description) 
+    VALUES (:titre, :artiste, :image, :description)
+');
+
+$query->execute([
+    'titre' => $titre, 
+    'artiste' => $artiste, 
+    'image' => $image, 
+    'description'=> $description,
+]);
+    header('location: oeuvre.php?id=' . $db->lastInsertId());
+    exit;
+
 } else {
-    header('location: ajouter.php');
+    header('location: ajouter.php');      
 }
