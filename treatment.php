@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $titre = trim($_POST['titre'] ?? '');
@@ -27,16 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($description)<3) {
         $errors[]= "description_courte";
     }
-
-    if (!empty($errors)) {
-        $params = [
-            'errors' => implode(',', $errors),
+    // Pas de négation "!". Comptage des erreurs.    
+    if (count($errors) > 0) {
+        $_SESSION['errors'] = $errors;
+        $_SESSION['inputs'] = [
             'titre' => $titre,
             'artiste' => $artiste,
             'image' => $image,
             'description' => $description
         ];
-        header('Location: ajouter.php?' . http_build_query($params));
+
+        header('Location: ajouter.php');
         exit;
     
     }

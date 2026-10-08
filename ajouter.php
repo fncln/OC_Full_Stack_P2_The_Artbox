@@ -1,4 +1,7 @@
-<?php require 'header.php'; 
+<?php 
+session_start();
+
+require 'header.php'; 
 
 $messages = [
     'titre'              => "Le titre est obligatoire.",
@@ -9,33 +12,44 @@ $messages = [
     'description_courte' => "La description doit contenir au moins 3 caractères."
 ];
 
-$values = [
-    'titre'       => $_GET['titre'] ?? '',
-    'artiste'     => $_GET['artiste'] ?? '',
-    'image'       => $_GET['image'] ?? '',
-    'description' => $_GET['description'] ?? ''
+$values = $_SESSION['inputs'] ?? [
+    'titre'       => '',
+    'artiste'     => '',
+    'image'       => '',
+    'description' => ''
 ];
 
-$errors = isset($_GET['errors']) ? explode(',', $_GET['errors']) : [];
+$errors = $_SESSION['errors'] ?? [];
+
+unset($_SESSION['inputs'], $_SESSION['errors']);
 
 function getErrorClass(array $keys, array $errors): string {
     foreach ($keys as $key) {
-        if (in_array($key, $errors)) return 'input-error';
+        if (in_array($key, $errors, true)) { return 'input-error';
+        }
     }
     return '';
 }
 
 function displayErrorMessage(array $keys, array $errors, array $messages): void {
     foreach ($keys as $key) {
-        if (in_array($key, $errors)) {
+        if (in_array($key, $errors, true)) {
             echo '<p class="error">' . $messages[$key] . '</p>';
             break;
         }
     }
 }
-?>
 
-<form action="treatment.php" method="POST" novalidate>
+/*
+Vérifier que la  requête est en POST
+    vérifier les données
+        si bonne = bdd
+        si false = erreur
+afficher le formulaire
+    afficher les messages d'erreur
+*/
+?>
+<form action="treatment.php" method="POST">
     <div class="champ-formulaire">
         <label for="titre">Titre de l'œuvre</label>
         <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($values['titre']) ?>" class="<?= getErrorClass(['titre'], $errors) ?>">
