@@ -1,7 +1,10 @@
 <?php
 session_start();
 
+// Vérifier que la  requête est en POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Vérifier les données du formulaire
     $titre = trim($_POST['titre'] ?? '');
     $artiste = trim($_POST['artiste'] ?? '');
     $image = trim($_POST['image'] ?? '');
@@ -28,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (strlen($description)<3) {
         $errors[]= "description_courte";
     }
-    // Pas de négation "!". Comptage des erreurs.    
+
+    // En cas d'erreur, rediriger vers le formulaire    
     if (count($errors) > 0) {
         $_SESSION['errors'] = $errors;
         $_SESSION['inputs'] = [
@@ -38,11 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'description' => $description
         ];
 
-        header('Location: ajouter.php');
+        header('Location: add.php');
         exit;
     
     }
 
+// Enregistrer l'œuvre en base de données
 require_once 'db/db.php';
 
 $query = $db->prepare('
@@ -56,9 +61,9 @@ $query->execute([
     'image' => $image, 
     'description'=> $description,
 ]);
-    header('location: oeuvre.php?id=' . $db->lastInsertId());
+    header('location: artwork.php?id=' . $db->lastInsertId());
     exit;
 
 } else {
-    header('location: ajouter.php');      
+    header('location: add.php');      
 }

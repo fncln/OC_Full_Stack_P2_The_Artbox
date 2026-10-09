@@ -31,6 +31,7 @@ function getErrorClass(array $keys, array $errors): string {
     return '';
 }
 
+// Afficher les messages d'erreur 
 function displayErrorMessage(array $keys, array $errors, array $messages): void {
     foreach ($keys as $key) {
         if (in_array($key, $errors, true)) {
@@ -40,16 +41,9 @@ function displayErrorMessage(array $keys, array $errors, array $messages): void 
     }
 }
 
-/*
-Vérifier que la  requête est en POST
-    vérifier les données
-        si bonne = bdd
-        si false = erreur
-afficher le formulaire
-    afficher les messages d'erreur
-*/
+// Afficher le formulaire
 ?>
-<form action="treatment.php" method="POST">
+<form action="process.php" method="POST">
     <div class="champ-formulaire">
         <label for="titre">Titre de l'œuvre</label>
         <input type="text" name="titre" id="titre" value="<?= htmlspecialchars($values['titre']) ?>" class="<?= getErrorClass(['titre'], $errors) ?>">
